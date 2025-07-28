@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Чат-Бот UI</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background: #f9f9f9;
+    }
+
+    .chat-wrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-grow: 1;
+      padding: 20px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .chat-area {
+      display: flex;
+      justify-content: space-between;
+      flex-grow: 1;
+      gap: 20px;
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      flex: 1;
+    }
+
+    .assistant, .client {
+      width: 100%;
+      padding: 15px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    .bottom-panel {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      border-top: 1px solid #ccc;
+      padding: 10px 0;
+      gap: 10px;
+      background: #fff;
+      width: 100%;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #ccc;
+      padding: 10px;
+      gap: 5px;
+    }
+
+    .menu button {
+      padding: 5px;
+      border: none;
+      cursor: pointer;
+      border-radius: 3px;
+      font-size: 14px;
+    }
+
+    .info { background: #e0f7fa; }
+    .bim { background: #bbdefb; }
+    .lidar { background: #ede7f6; }
+    .етапи { background: #c8e6c9; }
+    .переваги { background: #ffcdd2; }
+    .контакти { background: #fff9c4; }
+
+    .input-box {
+      flex-grow: 1;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    .send-btn {
+      padding: 10px 20px;
+      border: 1px solid #ccc;
+      background: #e0e0e0;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-wrapper">
+    <div class="chat-area">
+      <div class="column" id="assistant-column"></div>
+      <div class="column" id="client-column"></div>
+    </div>
+
+    <div class="bottom-panel">
+      <div class="menu">
+        <button class="info">/info</button>
+        <button class="bim">/bim</button>
+        <button class="lidar">/Lidar</button>
+        <button class="етапи">етапи</button>
+        <button class="переваги">переваги</button>
+        <button class="контакти">контакти</button>
+      </div>
+      <input type="text" placeholder="Type message..." class="input-box">
+      <button class="send-btn">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const messages = {
+      assistant: [
+        "Привіт! Я бот, що допомагає з BIM і лазерним скануванням.",
+        "Надішли мені команду — наприклад /info або /bim.",
+        "Я також можу розповісти про LiDAR, переваги, етапи або контакти."
+      ],
+      client: [
+        "/start",
+        "/info"
+      ]
+    };
+
+    const assistantColumn = document.getElementById("assistant-column");
+    const clientColumn = document.getElementById("client-column");
+
+    messages.assistant.forEach(text => {
+      const div = document.createElement("div");
+      div.className = "assistant";
+      div.textContent = text;
+      assistantColumn.appendChild(div);
+    });
+
+    messages.client.forEach(text => {
+      const div = document.createElement("div");
+      div.className = "client";
+      div.textContent = text;
+      clientColumn.appendChild(div);
+    });
+  </script>
+</body>
+</html>
