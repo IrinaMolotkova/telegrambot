@@ -119,35 +119,68 @@
     </div>
   </div>
 
-  <script>
-    const messages = {
-      assistant: [
-        "Привіт! Я бот, що допомагає з BIM і лазерним скануванням.",
-        "Надішли мені команду — наприклад /info або /bim.",
-        "Я також можу розповісти про LiDAR, переваги, етапи або контакти."
-      ],
-      client: [
-        "/start",
-        "/info"
-      ]
-    };
+ <script>
+  const messages = {
+    assistant: [
+      "Привіт! Я бот, що допомагає з BIM і лазерним скануванням.",
+      "Надішли мені команду — наприклад /info або /bim.",
+      "Я також можу розповісти про LiDAR, переваги, етапи або контакти."
+    ],
+    client: [
+      "/start",
+      "/info"
+    ]
+  };
 
-    const assistantColumn = document.getElementById("assistant-column");
-    const clientColumn = document.getElementById("client-column");
+  const assistantColumn = document.getElementById("assistant-column");
+  const clientColumn = document.getElementById("client-column");
 
-    messages.assistant.forEach(text => {
-      const div = document.createElement("div");
-      div.className = "assistant";
-      div.textContent = text;
-      assistantColumn.appendChild(div);
+  messages.assistant.forEach(text => {
+    const div = document.createElement("div");
+    div.className = "assistant";
+    div.textContent = text;
+    assistantColumn.appendChild(div);
+  });
+
+  messages.client.forEach(text => {
+    const div = document.createElement("div");
+    div.className = "client";
+    div.textContent = text;
+    clientColumn.appendChild(div);
+  });
+
+  // 👇👇👇 ДОДАЙ ЦЕ ДАЛІ 👇👇👇
+
+  // Обробка кліку по кнопках меню
+  document.querySelectorAll(".menu button").forEach(button => {
+    button.addEventListener("click", () => {
+      const command = button.textContent.trim();
+      sendMessage(command);
     });
+  });
 
-    messages.client.forEach(text => {
-      const div = document.createElement("div");
-      div.className = "client";
-      div.textContent = text;
-      clientColumn.appendChild(div);
+  // Обробка натискання кнопки "Send"
+  document.querySelector(".send-btn").addEventListener("click", () => {
+    const input = document.querySelector(".input-box");
+    const message = input.value.trim();
+    if (message) {
+      sendMessage(message);
+      input.value = "";
+    }
+  });
+
+  // Надсилання повідомлення на бекенд
+  function sendMessage(text) {
+    fetch("send.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text })
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log("Відповідь від сервера:", data);
     });
-  </script>
+  }
+</script>
 </body>
 </html>
