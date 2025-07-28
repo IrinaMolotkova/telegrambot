@@ -1,6 +1,6 @@
 <?php
-$token = "ТВОЇЙ_ТОКЕН";
-$chat_id = "ID_ЧАТУ"; // тимчасово — свій ID або групи
+$token = "8070678715:AAGHdZk1F4agWke2Zz03QxwYew787K0YxhM";
+$chat_id = "Geodezia"; // тимчасово — свій ID або групи
 
 $data = json_decode(file_get_contents("php://input"), true);
 $text = $data["message"] ?? "";
