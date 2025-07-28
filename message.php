@@ -1,27 +1,34 @@
 <?php
 
-$token = "8070678715:AAGHdZk1F4agWke2Zz03QxwYew787K0YxhM"; // <-- заміни на свій токен
+$token = "8070678715:AAGHdZk1F4agWke2Zz03QxwYew787K0YxhM";
 $apiURL = "https://api.telegram.org/bot$token/";
 
-// Отримати вхідні дані з Telegram
 $content = file_get_contents("php://input");
 $update = json_decode($content, true);
 
-if (!isset($update["message"])) {
+// Логування на випадок помилок
+file_put_contents("log.txt", $content . PHP_EOL, FILE_APPEND);
+
+// Перевірка, чи є повідомлення
+if (!isset($update["message"]["chat"]["id"])) {
     exit;
 }
 
 $chat_id = $update["message"]["chat"]["id"];
-$text = trim($update["message"]["text"]);
+$text = isset($update["message"]["text"]) ? trim($update["message"]["text"]) : "";
 
-// Обробка команд
-if ($text === "/start") {
-    $reply = "Привіт! Я простий Telegram-бот на PHP.";
-} else {
-    $reply = "Ви написали: $text";
+// Команди
+switch ($text) {
+    case "/start":
+        $reply = "Привіт! Я бот Geodezia. Надішліть /info або будь-яке інше повідомлення.";
+        break;
+    case "/info":
+        $reply = "Цей бот створено для демонстрації BIM, LiDAR і геодезії.";
+        break;
+    default:
+        $reply = "Ви написали: $text";
 }
 
-// Надіслати відповідь
 file_get_contents($apiURL . "sendMessage?chat_id=$chat_id&text=" . urlencode($reply));
 
 ?>
