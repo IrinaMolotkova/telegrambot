@@ -6,18 +6,18 @@ $apiURL = "https://api.telegram.org/bot$token/";
 $content = file_get_contents("php://input");
 $update = json_decode($content, true);
 
-// Логування на випадок помилок
+// Логування запитів у файл (для налагодження)
 file_put_contents("log.txt", $content . PHP_EOL, FILE_APPEND);
 
-// Перевірка, чи є повідомлення
+// Перевірка наявності повідомлення
 if (!isset($update["message"]["chat"]["id"])) {
     exit;
 }
 
 $chat_id = $update["message"]["chat"]["id"];
-$text = isset($update["message"]["text"]) ? trim($update["message"]["text"]) : "";
+$text = trim($update["message"]["text"] ?? "");
 
-// Команди
+// Відповідь на повідомлення
 switch ($text) {
     case "/start":
         $reply = "Привіт! Я бот Geodezia. Надішліть /info або будь-яке інше повідомлення.";
