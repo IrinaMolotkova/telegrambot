@@ -109,7 +109,7 @@
       <div class="menu">
         <button class="info">/info</button>
         <button class="bim">/bim</button>
-        <button class="lidar">/Lidar</button>
+        <button class="lidar">/lidar</button>
         <button class="етапи">етапи</button>
         <button class="переваги">переваги</button>
         <button class="контакти">контакти</button>
@@ -122,64 +122,75 @@
  <script>
   const messages = {
     assistant: [
-      "Привіт! Я бот, що допомагає з BIM і лазерним скануванням.",
-      "Надішли мені команду — наприклад /info або /bim.",
-      "Я також можу розповісти про LiDAR, переваги, етапи або контакти."
-    ],
+      "Привіт! Я бот, що допомагає з BIM і лазерним скануванням. Надішли мені команду — наприклад /info або /bim. Я також можу розповісти про LiDAR, переваги, етапи або контакти.",
+          ],
     client: [
       "/start",
       "/info"
     ]
   };
 
+  const commandResponses = {
+    "/start": "Привіт! Я бот Geodezia. Надішліть /info або будь-яке інше повідомлення.",
+    "/info": "Я надаю інформацію про інтеграцію лазерного сканування з BIM.",
+    "/bim": "BIM — це Building Information Modeling.",
+    "/lidar": "LiDAR — технологія лазерного сканування поверхні.",
+    "переваги": "Переваги: точність, ефективність, цифровізація.",
+    "етапи": "1. Сканування, 2. Обробка, 3. Інтеграція з BIM.",
+    "контакти": "Контакт: example@example.com"
+  };
+
   const assistantColumn = document.getElementById("assistant-column");
   const clientColumn = document.getElementById("client-column");
+  const inputBox = document.querySelector(".input-box");
 
-  messages.assistant.forEach(text => {
-    const div = document.createElement("div");
-    div.className = "assistant";
-    div.textContent = text;
-    assistantColumn.appendChild(div);
-  });
-
+  // Вивід стартових повідомлень
+  messages.assistant.forEach(text => addMessage("assistant", text));
   messages.client.forEach(text => {
-    const div = document.createElement("div");
-    div.className = "client";
-    div.textContent = text;
-    clientColumn.appendChild(div);
+    addMessage("client", text);
+    handleCommand(text);
   });
-
-  // 👇👇👇 ДОДАЙ ЦЕ ДАЛІ 👇👇👇
 
   // Обробка кліку по кнопках меню
   document.querySelectorAll(".menu button").forEach(button => {
     button.addEventListener("click", () => {
       const command = button.textContent.trim();
-      sendMessage(command);
+      addMessage("client", command);
+      handleCommand(command);
     });
   });
 
   // Обробка натискання кнопки "Send"
   document.querySelector(".send-btn").addEventListener("click", () => {
-    const input = document.querySelector(".input-box");
-    const message = input.value.trim();
+    const message = inputBox.value.trim();
     if (message) {
-      sendMessage(message);
-      input.value = "";
+      addMessage("client", message);
+      handleCommand(message);
+      inputBox.value = "";
     }
   });
 
-  // Надсилання повідомлення на бекенд
-  function sendMessage(text) {
-    fetch("send.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: text })
-    })
-    .then(res => res.json())
-    .then(data => {
-      console.log("Відповідь від сервера:", data);
-    });
+  // Додати повідомлення в інтерфейс
+  function addMessage(role, text) {
+    const div = document.createElement("div");
+    div.className = role === "assistant" ? "assistant" : "client";
+    div.textContent = text;
+
+    if (role === "assistant") {
+      assistantColumn.appendChild(div);
+    } else {
+      clientColumn.appendChild(div);
+    }
+  }
+
+  // Обробка команд
+  function handleCommand(text) {
+    const lowerText = text.trim().toLowerCase();
+    if (commandResponses[lowerText]) {
+      addMessage("assistant", commandResponses[lowerText]);
+    } else {
+      addMessage("assistant", "Вибач, я не розпізнаю цю команду. Спробуй /info, /bim, /lidar тощо.");
+    }
   }
 </script>
 </body>
