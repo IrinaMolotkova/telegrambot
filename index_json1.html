@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Чат-Бот UI</title>
+  <title>Чат-Бот Geodezia</title>
   <style>
     body {
       margin: 0;
@@ -25,74 +25,70 @@
     }
 
     .chat-area {
-      display: flex;
-      justify-content: space-between;
       flex-grow: 1;
-      gap: 20px;
+      overflow-y: auto;
+      margin-bottom: 20px;
     }
 
-    .column {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      flex: 1;
+    .message {
+      padding: 10px 15px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      max-width: 80%;
     }
 
-    .assistant, .client {
-      width: 100%;
-      padding: 15px;
-      background: #fff;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      box-sizing: border-box;
+    .client {
+      background: #d0ebff;
+      align-self: flex-end;
+    }
+
+    .assistant {
+      background: #e6ffe6;
+      align-self: flex-start;
     }
 
     .bottom-panel {
       display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      border-top: 1px solid #ccc;
-      padding: 10px 0;
+      flex-direction: column;
       gap: 10px;
-      background: #fff;
-      width: 100%;
     }
 
     .menu {
-      display: flex;
-      flex-direction: column;
-      border: 1px solid #ccc;
-      padding: 10px;
-      gap: 5px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 10px;
     }
 
     .menu button {
-      padding: 5px;
+      padding: 8px;
       border: none;
+      border-radius: 4px;
+      background-color: #e0e0e0;
       cursor: pointer;
-      border-radius: 3px;
       font-size: 14px;
     }
 
-    .info { background: #e0f7fa; }
-    .bim { background: #bbdefb; }
-    .lidar { background: #ede7f6; }
-    .етапи { background: #c8e6c9; }
-    .переваги { background: #ffcdd2; }
-    .контакти { background: #fff9c4; }
+    .menu button:hover {
+      background-color: #c0c0c0;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+    }
 
     .input-box {
       flex-grow: 1;
-      border: 1px solid #ccc;
       padding: 10px;
+      border: 1px solid #ccc;
       border-radius: 5px;
-      box-sizing: border-box;
     }
 
     .send-btn {
       padding: 10px 20px;
-      border: 1px solid #ccc;
-      background: #e0e0e0;
+      border: none;
+      background: #4caf50;
+      color: white;
       border-radius: 5px;
       cursor: pointer;
     }
@@ -100,87 +96,65 @@
 </head>
 <body>
   <div class="chat-wrapper">
-    <div class="chat-area">
-      <div class="column" id="assistant-column"></div>
-      <div class="column" id="client-column"></div>
-    </div>
+    <div class="chat-area" id="chat-area"></div>
 
     <div class="bottom-panel">
-      <div class="menu">
-        <button class="info">/info</button>
-        <button class="bim">/bim</button>
-        <button class="lidar">/Lidar</button>
-        <button class="етапи">етапи</button>
-        <button class="переваги">переваги</button>
-        <button class="контакти">контакти</button>
+      <div class="menu" id="menu"></div>
+      <div class="input-row">
+        <input type="text" class="input-box" placeholder="Введіть команду...">
+        <button class="send-btn">Надіслати</button>
       </div>
-      <input type="text" placeholder="Type message..." class="input-box">
-      <button class="send-btn">Send</button>
     </div>
   </div>
 
- <script>
-  const messages = {
-    assistant: [
-      "Привіт! Я бот, що допомагає з BIM і лазерним скануванням.",
-      "Надішли мені команду — наприклад /info або /bim.",
-      "Я також можу розповісти про LiDAR, переваги, етапи або контакти."
-    ],
-    client: [
-      "/start",
-      "/info"
-    ]
-  };
+  <script>
+    const commands = ["/start", "/info", "/bim", "/liadar", "/переваги", "/етапи", "/контакт"];
 
-  const assistantColumn = document.getElementById("assistant-column");
-  const clientColumn = document.getElementById("client-column");
+    const chatArea = document.getElementById("chat-area");
+    const menu = document.getElementById("menu");
+    const inputBox = document.querySelector(".input-box");
+    const sendBtn = document.querySelector(".send-btn");
 
-  messages.assistant.forEach(text => {
-    const div = document.createElement("div");
-    div.className = "assistant";
-    div.textContent = text;
-    assistantColumn.appendChild(div);
-  });
-
-  messages.client.forEach(text => {
-    const div = document.createElement("div");
-    div.className = "client";
-    div.textContent = text;
-    clientColumn.appendChild(div);
-  });
-
-  // 👇👇👇 ДОДАЙ ЦЕ ДАЛІ 👇👇👇
-
-  // Обробка кліку по кнопках меню
-  document.querySelectorAll(".menu button").forEach(button => {
-    button.addEventListener("click", () => {
-      const command = button.textContent.trim();
-      sendMessage(command);
+    // Створення кнопок меню
+    commands.forEach(cmd => {
+      const btn = document.createElement("button");
+      btn.textContent = cmd;
+      btn.addEventListener("click", () => {
+        addMessage(cmd, "client");
+        sendMessage(cmd);
+      });
+      menu.appendChild(btn);
     });
-  });
 
-  // Обробка натискання кнопки "Send"
-  document.querySelector(".send-btn").addEventListener("click", () => {
-    const input = document.querySelector(".input-box");
-    const message = input.value.trim();
-    if (message) {
-      sendMessage(message);
-      input.value = "";
+    sendBtn.addEventListener("click", () => {
+      const text = inputBox.value.trim();
+      if (text) {
+        addMessage(text, "client");
+        sendMessage(text);
+        inputBox.value = "";
+      }
+    });
+
+    function addMessage(text, sender) {
+      const div = document.createElement("div");
+      div.className = `message ${sender}`;
+      div.textContent = text;
+      chatArea.appendChild(div);
+      chatArea.scrollTop = chatArea.scrollHeight;
     }
-  });
 
-  // Надсилання повідомлення на бекенд
-  function sendMessage(text) {
-    fetch("send.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: text })
-    })
-    .then(res => res.json())
-    .then(data => {
-      console.log("Відповідь від сервера:", data);
-    });
-  }
-</script>
+    function sendMessage(text) {
+      fetch("send.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.text) addMessage(data.text, "assistant");
+      })
+      .catch(err => console.error("Помилка запиту:", err));
+    }
+  </script>
 </body>
 </html>
