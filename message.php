@@ -9,7 +9,6 @@ $update = json_decode($content, true);
 
 // Перевірка повідомлення
 if (!isset($update["message"])) {
-    exit;
 // Автоматичне перенаправлення на HTML-фронтенд
 header("Location: index_json1.html");
 exit;
