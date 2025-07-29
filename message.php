@@ -1,6 +1,6 @@
 <?php
 
-$token = "8070678715:AAEaSRjXV5kbMyJAWAz8ERSbdvtqPdoq2tk";
+$token = "8070678715:AAGHdZk1F4agWke2Zz03QxwYew787K0YxhM";
 $apiURL = "https://api.telegram.org/bot$token/";
 
 // Отримати вхідне повідомлення
