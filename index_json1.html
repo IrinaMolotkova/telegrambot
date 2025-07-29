@@ -176,7 +176,7 @@
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message: text })
     })
-    .then(res => res.json())
+    .then(res => responses.json())
     .then(data => {
       console.log("Відповідь від сервера:", data);
     });
